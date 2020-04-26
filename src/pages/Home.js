@@ -1,4 +1,5 @@
 import React from 'react';
+import Progress from 'rsup-progress'
 
 //Components
 import Hero from '../components/Hero/Hero';
@@ -14,8 +15,18 @@ import ImgAgenda from '../assets/images/calendar.jpg';
 import ImgPartner from '../assets/images/partner.jpg';
 
 const Home = () => {
+    const progress = new Progress({
+        height: 5,
+        color: '#CE003D',
+    })
+
+    const callTimer = setTimeout(() => {
+        progress.end()
+    }, 1500);
+
     return (
         <>
+            {progress.isInProgress ? callTimer() : progress.start()}
             <Hero />
             <More />
             <CardContainer>

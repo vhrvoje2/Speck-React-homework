@@ -1,17 +1,17 @@
 import React from 'react';
-import './Card.scss';
+import { CardDiv, CardFigure, CardImage, CardTitle } from './CardStyle.js';
 
 const Card = (props) => {
     return (
-        <a href="." className="Card">
-            <figure className="Card-Figure">
-                <img className="Card-Image"
+        <CardDiv>
+            <CardFigure>
+                <CardImage
                     src={props.image}
                     alt={props.alt}
                     />
-            </figure>
-            <p className="Card-Title">{props.children}</p>
-        </a>
+            </CardFigure>
+            <CardTitle>{props.children}</CardTitle>
+        </CardDiv>
     );
 }
 

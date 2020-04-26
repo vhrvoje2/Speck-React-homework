@@ -1,13 +1,13 @@
 import React from 'react';
-import './EventsGrid.scss';
+import { EventsGridDiv } from './EventsGridStyle.js';
 
 const EventsGrid = (props) => {
     return (
-        <div className="EventsGrid">
+        <EventsGridDiv>
             {
                 props.children
             }
-        </div>
+        </EventsGridDiv>
     );
 }
 

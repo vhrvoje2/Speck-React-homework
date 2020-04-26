@@ -1,22 +1,24 @@
 import React from 'react';
-import './SpeakersBox.scss';
+import './SpeakersBoxStyle.js';
+import { InfoBoxDiv, InfoBoxHeader, InfoBoxTitle, InfoBoxFooter, InfoBoxButton } from '../InfoBox/InfoBoxStyle';
+import { InfoBoxIcon, InfoBoxAboutSpeakers } from './SpeakersBoxStyle.js';
 
 const InfoBox = (props) => {
     return (
-        <div className="InfoBox">
-            <div className="InfoBox-Header">
-                <div className="InfoBox-Icon_SpeakersType"></div>
-                <h2 className="InfoBox-Title">Johan Bach</h2>
-            </div>
-            <p className="InfoBox-AboutSpeakers">
-                Latin literature from 45 BC, making it over 2000 year old. Richard
-                McClintock, a Latin professor at
-                Hampden-Sydney College in Virginia, looked up one.
-            </p>
-            <div className="InfoBox-Footer">
-                <a href="." className="InfoBox-Button">Prati sudionika</a>
-            </div>
-        </div>
+        <InfoBoxDiv>
+            <InfoBoxHeader>
+                <InfoBoxIcon />
+                <InfoBoxTitle>{props.title}</InfoBoxTitle>
+            </InfoBoxHeader>
+
+            <InfoBoxAboutSpeakers>
+                {props.about}
+            </InfoBoxAboutSpeakers>
+            
+            <InfoBoxFooter>
+                <InfoBoxButton href={props.link}>Prati sudionika</InfoBoxButton>
+            </InfoBoxFooter>
+        </InfoBoxDiv>
     );
 }
 

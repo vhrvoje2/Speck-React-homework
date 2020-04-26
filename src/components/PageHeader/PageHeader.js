@@ -1,15 +1,15 @@
 import React from 'react';
-import './PageHeader.scss';
+import { PageHeaderDiv, PageHeaderText } from './PageHeaderStyle.js';
 
 const PageHeader = (props) =>  {
     return(
-        <div className="PageHeader">
-            <h2 className="PageHeader-Text">
+        <PageHeaderDiv>
+            <PageHeaderText>
                 {
                     props.children
                 }
-            </h2>
-        </div>
+            </PageHeaderText>
+        </PageHeaderDiv>
         
     );
 }

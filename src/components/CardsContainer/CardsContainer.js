@@ -1,13 +1,13 @@
 import React from 'react';
-import './CardsContainer.scss';
+import { CardsContainer } from './CardsContainerStyle.js';
 
 const CardContainer = (props) => {
     return (
-        <div className="CardsContainer">
+        <CardsContainer>
         {
             props.children
         }
-        </div>
+        </CardsContainer>
     );
 }
 
