@@ -3,7 +3,7 @@ import apiOrigin from './api';
 export const getSpeakers = (authToken) => {
     return fetch(`${apiOrigin}/speakers`, {
         headers: {
-            Authorization: `Bearer ${authToken}`,
+            Authorization: `${authToken}`,
         },
     }).then(res => res.json());
 }

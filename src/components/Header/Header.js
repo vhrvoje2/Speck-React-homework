@@ -14,7 +14,7 @@ const links = {
 // ili prosljediti props headeru ili u context api spremati token
 
 const Header = () => {
-    const [isAuth, setIsAuth] = useState(false);
+    const [isAuth, setIsAuth] = useState();
 
     useEffect(() => {
         if (localStorage.getItem("token") != null){
@@ -42,16 +42,22 @@ const Header = () => {
                 </Link>
 
                 <HeaderNavBar>
-                        <HeaderNavItem>
-                            <LinkStyle to="/events" activeStyle={{color: "rgb(200, 15, 50)"}}>
-                                    {links.events}
-                            </LinkStyle>
-                        </HeaderNavItem>
-                        <HeaderNavItem>
-                            <LinkStyle to="/speakers" activeStyle={{color: "rgb(200, 15, 50)"}}>
-                                    {links.speakers}
-                            </LinkStyle>
-                        </HeaderNavItem>
+                        {isAuth ?
+                            <>
+                                <HeaderNavItem>
+                                    <LinkStyle to="/events" activeStyle={{color: "rgb(200, 15, 50)"}}>
+                                            {links.events}
+                                    </LinkStyle>
+                                </HeaderNavItem>
+                                <HeaderNavItem>
+                                    <LinkStyle to="/speakers" activeStyle={{color: "rgb(200, 15, 50)"}}>
+                                            {links.speakers}
+                                    </LinkStyle>
+                                </HeaderNavItem>
+                            </>
+                            :
+                            null
+                        }
                         {!isAuth ?
                             <>
                                 <HeaderNavItem>

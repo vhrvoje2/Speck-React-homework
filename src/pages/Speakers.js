@@ -5,36 +5,41 @@ import SpeakersGrid from '../components/EventsGrid/EventsGrid';
 import PageHeader from '../components/PageHeader/PageHeader';
 import SpeakersBox from '../components/SpeakersBox/SpeakersBox';
 import SearchBar from '../components/SearchBar/SearchBar';
-import SpeakersData from '../lib/speakers';
+import { getSpeakers } from '../api/speakers.js';
 import Loader from '../components/Loader/Loader';
 
 const Speakers = () => {
+    const token = localStorage.getItem("token");
     const [speakers, setSpeakers] = useState([]);
-    const [speakersCopy, setSpeakersCopy] = useState([]);
+    const [speakersCopy, setSpeakersCopy] = useState();
     const [input, setInput] = useState("");
 
     const inputChange = event => {
         setInput(event.target.value);
     };
 
+    const getData = () => {
+        getSpeakers(token).then(res => {
+            setSpeakers(res["speakers"]);
+            if (!speakersCopy){
+                setSpeakersCopy(res["speakers"]);
+            }
+        });
+    }
+
+    if (speakers.length === 0  && token){
+        getData();
+    }
+
     useEffect(() => {
-        const timer = setTimeout(() => {
-            setSpeakers(SpeakersData);
-        }, 1000);
+        const filter = speakers.filter(speakers => speakers.title.toLowerCase().includes(input.toLowerCase()));
 
-        const filter = speakers.filter(speakers => speakers.title.toLowerCase().includes(input));
-
-        if (filter.length > 0){
+        if (input.length > 0){
             setSpeakersCopy(filter);
         }
-        else if (filter.length === 0 && input.length > 0){
-            setSpeakersCopy([]);
-        }
         else{
-            setSpeakersCopy(SpeakersData)
+            setSpeakersCopy(speakers)
         }
-
-        return () => clearTimeout(timer);
     }, [input]);
 
     const showSpeakers = () => {
@@ -53,7 +58,7 @@ const Speakers = () => {
         <PageHeader>
             Speakers
         </PageHeader>
-        {speakers.length === 0 ? <SearchBar bool={true} placeholder={"Search speakers..."} /> : <SearchBar bool={false} value={input} inputChange={inputChange} placeholder={"Search speakers..."} />}
+        {speakers.length === 0 ? <SearchBar bool={true} value={input} inputChange={inputChange} placeholder={"Search speakers..."} /> : <SearchBar bool={false} value={input} inputChange={inputChange} placeholder={"Search speakers..."} />}
         <SpeakersGrid>
             {speakers.length === 0 ? <Loader />: showSpeakers()}
         </SpeakersGrid>

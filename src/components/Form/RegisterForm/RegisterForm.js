@@ -3,7 +3,6 @@ import { useHistory } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 
 import { registerUser } from "../../../api/register";
-import { LoaderRegister } from "../../Loader/LoaderRegisterLogin.js";
 
 import {
     Form,
@@ -13,22 +12,28 @@ import {
     FormLabel,
     FormInput,
     FormInputValidation,
-    FormSubmitSuccess,
     FormButton,
 } from '../FormStyles';
 
 const RegisterForm = (props) => {
+    const history = useHistory();
     const { register, handleSubmit, errors } = useForm();
-    const registered = false;
+    const [message, setMessage] = useState("");
 
-    const onSubmit = async data => {
-        const result = await registerUser({
-            "username": register.username,
-            "password": register.password,
-        })
-
-        
-    }
+    const onSubmit = data => {
+            registerUser({
+                "username": data.username,
+                "password": data.password,
+            }).then(res => {
+                    if (res.message){
+                        setMessage(res.message);
+                    }
+                    else{
+                        history.push("/login");
+                    }
+                }
+            );
+        }
 
     const registerForm =
         <Form onSubmit={handleSubmit(onSubmit)}>
@@ -43,8 +48,9 @@ const RegisterForm = (props) => {
                     name="username"
                     ref={register({minLength: 5, required: true})} 
                     />
-                    {errors.username && errors.username.type === "required" && (<FormInputValidation>Username is required.</FormInputValidation>)}
-                    {errors.username && errors.username.type === "minLength" && (<FormInputValidation>Username should be at least 5 characters long.</FormInputValidation>)}
+                    {errors.username && errors.username.type === "required" && (<FormInputValidation>Username is required</FormInputValidation>)}
+                    {errors.username && errors.username.type === "minLength" && (<FormInputValidation>Username should be at least 5 characters long</FormInputValidation>)}
+                    {message && <FormInputValidation>Username already exists</FormInputValidation>}
             </FormRow>
             <FormRow>
                 <FormLabel htmlFor="password">Password</FormLabel>
@@ -54,9 +60,8 @@ const RegisterForm = (props) => {
                     name="password"
                     ref={register({minLength: 8, required: true})}
                     />
-                    {errors.password && errors.password.type === "required" && (<FormInputValidation>Password is required.</FormInputValidation>)}
-                    {errors.password && errors.password.type === "minLength" && (<FormInputValidation>Password should be at least 8 characters long.</FormInputValidation>)}
-                <FormInputValidation></FormInputValidation>
+                    {errors.password && errors.password.type === "required" && (<FormInputValidation>Password is required</FormInputValidation>)}
+                    {errors.password && errors.password.type === "minLength" && (<FormInputValidation>Password should be at least 8 characters long</FormInputValidation>)}
             </FormRow>
             <FormButtonRow>
                 <FormButton>Register</FormButton>
@@ -65,7 +70,7 @@ const RegisterForm = (props) => {
 
     return (
         <>
-            {registered ? <LoaderRegister /> : registerForm}
+            {registerForm}
         </>
     );
 }

@@ -4,63 +4,44 @@ import React, { useState } from 'react';
 // After that you can access history so you can programatically go to the
 // desired route.
 import { useHistory } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
 
 import { loginUser } from "../../../api/login";
 
 import {
     Form,
     FormAdditionalLink,
-    FormGeneralError,
     FormRow,
     FormButtonRow,
     FormLabel,
     FormInput,
-    FormSubmitSuccess,
+    FormInputValidation,
+    FormGeneralError,
     FormButton,
 } from '../FormStyles';
 
 const LoginForm = (props) => {
     const history = useHistory();
-    const [data, setData] = useState({
-        username: "",
-        password: ""
-    });
+    const {register, handleSubmit, errors} = useForm();
+    const [error, setError] = useState("");
 
-    const [response, setResponse] = useState({
-        message: "",
-        token: "",
-    })
-
-    const handleChange = (e) => {
-        setData({
-            ...data,
-            [e.target.name]: e.target.value,
+    const onSubmit = data => {
+        loginUser({
+            "username": data.username,
+            "password": data.password
+        }).then(res => {
+            if (res.token){
+                localStorage.setItem('token', `Bearer ${res.token}`);
+                history.push("/");
+            }
+            else{
+                setError(res.message);
+            }
         })
     }
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        try {
-            const result = await loginUser(data);
-
-            if (result.token){
-                localStorage.setItem("token", `Bearer ${result.token}`);
-                
-                setTimeout(() => {
-                    history.push("/");
-                }, 1500);
-            }
-            else{
-                console.log(result);
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
     const loginForm =
-        <Form onSubmit={handleSubmit}>
+        <Form onSubmit={handleSubmit(onSubmit)}>
             <FormRow>
                 <FormAdditionalLink to="/register">You don't have an account? Click here to register!</FormAdditionalLink>
             </FormRow>
@@ -70,9 +51,9 @@ const LoginForm = (props) => {
                     type="text"
                     id="username"
                     name="username"
-                    value={data.username}
-                    onChange={handleChange}
-                    required />
+                    ref={register({required: true})}    
+                    />
+                    {errors.username && errors.username.type === "required" && (<FormInputValidation>Username is required</FormInputValidation>)}
             </FormRow>
             <FormRow>
                 <FormLabel htmlFor="password">Password</FormLabel>
@@ -80,13 +61,16 @@ const LoginForm = (props) => {
                     type="password"
                     id="password"
                     name="password"
-                    value={data.password}
-                    onChange={handleChange}
-                    required />
+                    ref={register({required: true})}
+                    />
+                    {errors.password && errors.password.type === "required" && (<FormInputValidation>Password is required</FormInputValidation>)}
             </FormRow>
             <FormButtonRow>
                 <FormButton>Login</FormButton>
             </FormButtonRow>
+            <FormGeneralError>
+                {error ? "Username or password are incorrect!" : null}
+            </FormGeneralError>
         </Form>;
 
     return (

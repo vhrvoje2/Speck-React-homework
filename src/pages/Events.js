@@ -5,36 +5,41 @@ import PageHeader from '../components/PageHeader/PageHeader';
 import EventsGrid from '../components/EventsGrid/EventsGrid';
 import InfoBox from '../components/InfoBox/InfoBox';
 import SearchBar from '../components/SearchBar/SearchBar';
-import EventsData from '../lib/events';
+import { getEvents } from '../api/events.js';
 import Loader from '../components/Loader/Loader';
 
 const Events = () => {
+    const token = localStorage.getItem("token");
     const [events, setEvents] = useState([]);
-    const [eventsCopy, setEventsCopy] = useState([]);
+    const [eventsCopy, setEventsCopy] = useState();
     const [userInput, setUserInput] = useState("");
 
     const inputChange = event => {
         setUserInput(event.target.value);
     };
 
+    const getData = () => {
+        getEvents(token).then(res => {
+            setEvents(res["events"]);
+            if (!eventsCopy){
+                setEventsCopy(res["events"]);
+            }
+        });
+    }
+
+    if (events.length === 0 && token){
+        getData();
+    }
+    
     useEffect(() => {
-        const timer = setTimeout(() => {
-            setEvents(EventsData);
-        }, 1000);
+        const filter = events.filter(event => event.title.toLowerCase().includes(userInput.toLowerCase()));
 
-        const filter = events.filter(event => event.title.toLowerCase().includes(userInput));
-
-        if (filter.length > 0){
+        if (userInput.length > 0){
             setEventsCopy(filter);
         }
-        else if (filter.length === 0 && userInput.length > 0){
-            setEventsCopy([]);
-        }
         else{
-            setEventsCopy(EventsData)
+            setEventsCopy(events);
         }
-
-        return () => clearTimeout(timer);
     }, [userInput]);
 
     const showEvents = () => {
@@ -55,7 +60,7 @@ const Events = () => {
         <PageHeader>
             Events
         </PageHeader>
-        {events.length === 0 ? <SearchBar bool={true} placeholder={"Search events..."} /> : <SearchBar bool={false}  value={userInput} inputChange={inputChange} placeholder={"Search events..."} />}
+            {events.length === 0 ? <SearchBar bool={true} value={userInput} inputChange={inputChange} placeholder={"Search events..."} /> : <SearchBar bool={false} value={userInput} inputChange={inputChange} placeholder={"Search events..."} />}
         <EventsGrid>
             {events.length === 0 ? <Loader /> : showEvents()}
         </EventsGrid>

@@ -5,6 +5,7 @@ import './App.css';
 // Components
 import Header from './components/Header/Header';
 import Main from './components/Main/Main';
+import PrivateRoute from './components/PrivateRoute/PrivateRoute.js';
 
 // Pages
 import Home from './pages/Home';
@@ -20,8 +21,8 @@ class App extends Component {
         <Header />
         <Main>
             <Route exact path="/" component={Home} />
-            <Route path="/events" component={Events} />
-            <Route path="/speakers" component={Speakers} />
+            <PrivateRoute path="/events" component={Events} />
+            <PrivateRoute path="/speakers" component={Speakers} />
             <Route path="/register" component={Register} />
             <Route path="/login" component={Login} />
         </Main>
