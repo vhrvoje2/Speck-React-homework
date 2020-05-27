@@ -40,7 +40,7 @@ const Events = () => {
         else{
             setEventsCopy(events);
         }
-    }, [userInput]);
+    }, [userInput, events]);
 
     const showEvents = () => {
         return eventsCopy.map((event, index) => (

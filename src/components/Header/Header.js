@@ -23,7 +23,7 @@ const Header = () => {
         else{
             setIsAuth(false);
         }
-    });
+    }, []);
 
     const handleLogout = (e) => {
         e.preventDefault();

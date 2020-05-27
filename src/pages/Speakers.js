@@ -40,7 +40,7 @@ const Speakers = () => {
         else{
             setSpeakersCopy(speakers)
         }
-    }, [input]);
+    }, [input, speakers]);
 
     const showSpeakers = () => {
         return speakersCopy.map((speaker, index) => (
